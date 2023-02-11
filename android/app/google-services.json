@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "474699804457",
+    "project_id": "mynotes-cours-project-1",
+    "storage_bucket": "mynotes-cours-project-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474699804457:android:50ab32a63a4948ee981138",
+        "android_client_info": {
+          "package_name": "com.example.mynotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474699804457-51k14u02pr658q6elj6m13clehp4ehs0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKsoD8PRbu8lWRdg3Sf6qTC5GD_ZWbPqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474699804457-51k14u02pr658q6elj6m13clehp4ehs0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
