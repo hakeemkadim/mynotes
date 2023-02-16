@@ -1,10 +1,8 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../Widgets/TextFieldWidget.dart';
-import '../firebase_options.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -14,13 +12,15 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-    late final TextEditingController _email;
+  late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _confirmPassword;
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _confirmPassword = TextEditingController();
     super.initState();
   }
 
@@ -28,6 +28,7 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
@@ -52,7 +53,25 @@ class _RegisterViewState extends State<RegisterView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 200),
+              const SizedBox(
+                height: 46,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(17.0),
+                child: IconButton(
+                  iconSize: 28,
+                  icon: const Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 287, top: 10),
+                child: Image.asset(
+                  "Assets/stars.png",
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
@@ -99,7 +118,6 @@ class _RegisterViewState extends State<RegisterView> {
                       controller: _password,
                       obscureText: true,
                     ),
-                    
                     SizedBox(height: 18),
                     const Text(
                       "Confirm password",
@@ -113,7 +131,7 @@ class _RegisterViewState extends State<RegisterView> {
                     TextFieldContainer(
                       hintText: 'repeat password',
                       icon: Icons.password_outlined,
-                      controller: _password,
+                      controller: _confirmPassword,
                       obscureText: true,
                     ),
                   ],
@@ -133,25 +151,29 @@ class _RegisterViewState extends State<RegisterView> {
                     elevation: 0,
                     shadowColor: Color(0xFF000000).withOpacity(0.25),
                   ),
-                        onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
-                        try {
-                          final userCredential = 
-                        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                          email: email, 
-                          password: password);
-                          print(userCredential);
-                        } on FirebaseAuthException catch (e) {
-                          if(e.code == "Weak password") {
-                            print("weak password");
-                        }else if(e.code == "email-already-in-use") { 
+                  onPressed: () async {
+                    final email = _email.text;
+                    final password = _password.text;
+                    final confirmPassword = _confirmPassword.text;
+                    if (password != confirmPassword) {
+                      print("Passwords do not match");
+                    } else {
+                      try {
+                        final userCredential = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                                email: email, password: password);
+                        print(userCredential);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == "Weak password") {
+                          print("weak password");
+                        } else if (e.code == "email-already-in-use") {
                           print("Email already in use");
-                        }else if(e.code == "invalid-email") { 
+                        } else if (e.code == "invalid-email") {
                           print("invalid email");
                         }
-                         }
-                      },
+                      }
+                    }
+                  },
                   child: const Text(
                     'Register',
                     style: TextStyle(
