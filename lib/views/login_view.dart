@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Widgets/TextFieldWidget.dart';
+import 'dart:developer' as devtools show log;
+
+import '../constants/routes.dart';
+import '../utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -128,8 +132,8 @@ class _LoginViewState extends State<LoginView> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 17, horizontal: 152),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 17, horizontal: 152),
                     elevation: 0,
                     shadowColor: Color(0xFF000000).withOpacity(0.25),
                   ),
@@ -140,14 +144,32 @@ class _LoginViewState extends State<LoginView> {
                     try {
                       final userCredential = await FirebaseAuth.instance
                           .signInWithEmailAndPassword(
-                              email: email, password: password);
-                      print(userCredential);
+                        email: email,
+                        password: password,
+                      );
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          notesRoute, (route) => false);
+                      devtools.log(userCredential.toString());
                     } on FirebaseAuthException catch (e) {
                       if (e.code == "user-not-found") {
-                        print("user not found");
+                        await showErrorDialog(
+                          context,
+                          "User not found",
+                        );
                       } else if (e.code == "wrong-password") {
-                        print("wrong password");
+                        await showErrorDialog(
+                          context,
+                          "Wront credentials",
+                        );
+                      } else {
+                        await showErrorDialog(
+                          context,
+                          'Error: ${e.code}');
                       }
+                    } catch (e) {
+                      await showErrorDialog(
+                        context, 
+                        e.toString());
                     }
                   },
                   child: const Text(
@@ -166,7 +188,7 @@ class _LoginViewState extends State<LoginView> {
                 alignment: Alignment.center,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed("/register");
+                    Navigator.of(context).pushNamed(registerRoute);
                   },
                   child: RichText(
                     text: const TextSpan(
@@ -193,3 +215,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
